@@ -1,4 +1,4 @@
-# Forest Tracker 🌳🌲🌱
+# Forest Angel 🌳🌲🌱
 ## Introduction 
 Hey there! This app is all about protecting the environment! A unique method. Deforestation is happening at an alarming rate. We all know. Trees are also being cut illegally. 
 So, this app is to check that.
