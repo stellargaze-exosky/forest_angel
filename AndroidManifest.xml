@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ForestTracker"
+        tools:targetApi="31">
+
+        <activity
+            android:name=".Feedback"
+            android:exported="false" />
+        <activity
+            android:name=".About"
+            android:exported="false" />
+        <activity
+            android:name=".Help"
+            android:exported="false" />
+        <activity
+            android:name=".SeeAllDataByUser"
+            android:exported="false" />
+        <activity
+            android:name=".IntroSlider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TrackAllData"
+            android:exported="false" />
+        <activity
+            android:name=".EnterTreeNumber"
+            android:exported="false" />
+        <activity
+            android:name=".UploadImageProof"
+            android:exported="false" />
+        <activity
+            android:name=".SolveMath"
+            android:exported="false" />
+        <activity
+            android:name=".ValidateDataAndSubmit"
+            android:exported="false" />
+        <activity
+            android:name=".TreePlantDataRegister"
+            android:exported="false" />
+        <activity
+            android:name=".TreeCutDataRegister"
+            android:exported="false" />
+        <activity
+            android:name=".ShowSingleStateAndData"
+            android:exported="false" />
+        <activity
+            android:name=".UploadPageOne"
+            android:exported="false" />
+        <activity
+            android:name=".Districts"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="true" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name" />
+
+
+    </application>
+
+</manifest>
