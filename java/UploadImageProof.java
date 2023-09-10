@@ -40,7 +40,9 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UploadImageProof extends AppCompatActivity {
 
@@ -139,6 +141,7 @@ public class UploadImageProof extends AppCompatActivity {
     }
 
 
+    HashMap<String, Float> objectsInImage;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -151,6 +154,7 @@ public class UploadImageProof extends AppCompatActivity {
             try{
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
+                objectsInImage = new HashMap<>();
                 InputImage image = InputImage.fromBitmap(bitmap, 0);
                 ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
                 labeler.process(image)
@@ -158,10 +162,10 @@ public class UploadImageProof extends AppCompatActivity {
                             @Override
                             public void onSuccess(List<ImageLabel> labels) {
                                 for (ImageLabel label : labels) {
-                                    String text = label.getText();
+                                    String text = label.getText().toLowerCase();
                                     float confidence = label.getConfidence();
-                                    int index = label.getIndex();
-                                    Log.d("ml", text+String.valueOf(confidence));
+                                    objectsInImage.put(text, confidence);
+
                                 }
 
                             }
@@ -173,8 +177,6 @@ public class UploadImageProof extends AppCompatActivity {
                                 // ...
                             }
                         });
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -189,80 +191,109 @@ public class UploadImageProof extends AppCompatActivity {
 
     public void uploadImageFirebase(){
 
-        if (filePath!=null){
+        if (filePath!=null) {
 
-            ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+            if (checkObjects(objectsInImage)){
 
-            calendar = Calendar.getInstance();
-            simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss_aaa");
-            dateTime = simpleDateFormat.format(calendar.getTime()).toString();
+                {
+                    ProgressDialog progressDialog = new ProgressDialog(this);
+                    progressDialog.setTitle("Uploading...");
+                    progressDialog.show();
 
-
-            String toShow = "";
-            if (cutorplant.equals("cut")) toShow = "Trees Cut";
-            else if (cutorplant.equals("plant")) toShow = "Trees Planted";
-
-            StorageReference storageReference = storageRef.child("images/"+ StateUT+"_"
-                    + District + "_" + String.valueOf(userTreeValue) +" "+ toShow + "_" + dateTime);
-
-            storageReference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    String treescutorplanted = "";
-                    if (cutorplant.equals("cut")) treescutorplanted = "TreesCut";
-                    else if (cutorplant.equals("plant")) treescutorplanted = "TreesPlanted";
+                    calendar = Calendar.getInstance();
+                    simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss_aaa");
+                    dateTime = simpleDateFormat.format(calendar.getTime()).toString();
 
 
-                    treeRef.child(StateUT).child(District).child(treescutorplanted).setValue(value);
+                    String toShow = "";
+                    if (cutorplant.equals("cut")) toShow = "Trees Cut";
+                    else if (cutorplant.equals("plant")) toShow = "Trees Planted";
 
-                    progressDialog.dismiss();
-                    Toast.makeText(UploadImageProof.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
+                    StorageReference storageReference = storageRef.child("images/" + StateUT + "_"
+                            + District + "_" + String.valueOf(userTreeValue) + " " + toShow + "_" + dateTime);
 
-                    SharedPreferences sharedPreferences = getSharedPreferences("details", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                    Gson getGson = new Gson();
-                    String getJson = sharedPreferences.getString("allUserData", null);
-                    Type type = new TypeToken<ArrayList<SaveTreeClass>>(){}.getType();
-
-
-                    ArrayList<SaveTreeClass> list;
-                    list = new ArrayList<>();
-
-                    list = getGson.fromJson(getJson, type);
+                    storageReference.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            String treescutorplanted = "";
+                            if (cutorplant.equals("cut")) treescutorplanted = "TreesCut";
+                            else if (cutorplant.equals("plant")) treescutorplanted = "TreesPlanted";
 
 
-                    if (list != null){
-                        list.add(new SaveTreeClass(StateUT, District, String.valueOf(userTreeValue), cutorplant, dateTime.replace("_", " ")));
-                    }
-                    else {
-                        list = new ArrayList<>();
-                        list.add(new SaveTreeClass(StateUT, District, String.valueOf(userTreeValue), cutorplant, dateTime.replace("_", " ")));
-                    }
+                            treeRef.child(StateUT).child(District).child(treescutorplanted).setValue(value);
+
+                            progressDialog.dismiss();
+                            Toast.makeText(UploadImageProof.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
+
+                            SharedPreferences sharedPreferences = getSharedPreferences("details", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                            Gson getGson = new Gson();
+                            String getJson = sharedPreferences.getString("allUserData", null);
+                            Type type = new TypeToken<ArrayList<SaveTreeClass>>() {
+                            }.getType();
 
 
-                    Gson gson = new Gson();
+                            ArrayList<SaveTreeClass> list;
+                            list = new ArrayList<>();
 
-                    String json = gson.toJson(list);
-                    editor.putString("allUserData", json);
-                    editor.commit();
+                            list = getGson.fromJson(getJson, type);
 
-                    Intent intent = new Intent(UploadImageProof.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
+
+                            if (list != null) {
+                                list.add(new SaveTreeClass(StateUT, District, String.valueOf(userTreeValue), cutorplant, dateTime.replace("_", " ")));
+                            } else {
+                                list = new ArrayList<>();
+                                list.add(new SaveTreeClass(StateUT, District, String.valueOf(userTreeValue), cutorplant, dateTime.replace("_", " ")));
+                            }
+
+
+                            Gson gson = new Gson();
+
+                            String json = gson.toJson(list);
+                            editor.putString("allUserData", json);
+                            editor.commit();
+
+                            Intent intent = new Intent(UploadImageProof.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                            double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                            progressDialog.setMessage(String.valueOf((int) progress + " % uploaded"));
+                        }
+                    });
                 }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                    double progress = (100.0*snapshot.getBytesTransferred()/snapshot.getTotalByteCount());
-                    progressDialog.setMessage(String.valueOf((int)progress+" % uploaded"));
-                }
-            });
+
+            }
+            else Toast.makeText(this, "Image doesn't look like someone planting a tree, or some deforestation happening! Provide feedback if this is a mistake!", Toast.LENGTH_LONG).show();
 
         }
 
     }
+
+    public boolean checkObjects(HashMap<String, Float> objects){
+        //forest trunk plant soil flower hand sky field
+
+                String[] stringsToCompare = {"forest", "trunk", "plant", "soil", "flower", "hand", "sky", "field"};
+                int count = 0;
+                for (String s1 : stringsToCompare) {
+                    for (Map.Entry<String,Float> s2 : objects.entrySet()){
+                        if (s2.getKey().equals(s1)){
+                            if (s2.getValue()>0.6){
+                                count++;
+                            }
+                        }
+
+                }
+
+                }
+        return count > 2;
+
+
+    }
+
 }
