@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/showAppIconHelp"
         android:layout_marginTop="10dp"
-        android:text="Forest Tracker"
+        android:text="Forest Angel"
         android:textAlignment="center"
         android:textColor="#FFF"
         android:textSize="10pt" />
