@@ -70,12 +70,6 @@ forest-tracker
 
 ### Explanation
 ##### Database for locations has been maintained as shown above.
-- Similarly, when someone uses “Math Problem” as validation, it is stored under “Math Problems” under State under District formatted as
-    -	**‘n’ TreesPlanted DD-MM-YYYY_HH-MM-SS_AA: "Answered {Answer}"**
-    -	**‘n’ TreesCut DD-MM-YYYY_HH-MM-SS_AA: "Answered {Answer}"**
--	When someone uses “Tree ID” as validation, it is stored under “Tree Numbers” under State under District formatted as
-    -	**‘n’ TreesPlanted DD-MM-YYYY_HH-MM-SS_AA: {Tree ID} (as int)**
-    -	**‘n’ TreesCut DD-MM-YYYY_HH-MM-SS_AA: {Tree ID} (as int)**
 -	When someone uses Image Proof as validation, the image is uploaded to Firebase Storage under  \images\ by the name
     -	**{State}\_{District}\_’n’ Trees Planted_DD-MM-YYYY_HH-MM-SS_AA**
     -	**{State}\_{District}\_’n’ Trees Cut_DD-MM-YYYY_HH-MM-SS_AA**
