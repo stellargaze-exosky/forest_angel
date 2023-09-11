@@ -35,13 +35,10 @@ The app uses firebase to store data at backend.
 - Activity 1: Get State and District from user.
 - Activity 2: Buttons to report planted or cut trees. Also shows current data for the selected district. 
 - Activity 3: Differs based on whether user selects to report planted or cut trees. Shows a number selector to pick a number. Then a Button to ‘Validate and Register’
-- Activity 4: To check false data reports, user has to validate by using any of the three options
+- Activity 4: To check false data reports, user has to validate by uploading an on-site image
   -	Add an image proof 🖼️
-      -	User has to upload an image, that will be stored on firebase. 
-  -	Enter tree id (a number marked on tree) 🔢
-      -	User has to enter the number marked on tree
-  -	Solve a simple math problem
-      -	User solves a simple math problem
+      -	User has to upload an image, that will be stored on firebase. ML has been implemented to check      false fake images
+  
 
 #### After validation, data is successfully uploaded. ⬆️
 
