@@ -66,17 +66,6 @@ forest-tracker
 |	    ...
 |	    ...
 |
-|    -Math Problems
-|	-State 1
-|	    -District 1
-|		- 'n' TreesPlanted DD-MM-YYYY_HH-MM-SS_AA: "Answered {Answer}"
-|		- 'n' TreesCut DD-MM-YYYY_HH-MM-SS_AA: "Answered {Answer}"
-|
-|    -Tree Numbers
-|	-State 1
-|	    -District 1
-|		- 'n' TreesPlanted DD-MM-YYYY_HH-MM-SS_AA: "{Tree ID}"
-|		- 'n' TreesCut DD-MM-YYYY_HH-MM-SS_AA: "{Tree ID}"
 ~~~     
 
 ### Explanation
